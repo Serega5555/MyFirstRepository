@@ -1,0 +1,106 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var userInfo = GetUserData();
+        DisplayUserData(userInfo);
+    }
+
+    static (string name, string surname, int age, bool hasPet, string[] petNames, string[] favoriteColors) GetUserData()
+    {
+        Console.Write("Введите имя: ");
+        string name = Console.ReadLine();
+
+        Console.Write("Введите фамилию: ");
+        string surname = Console.ReadLine();
+
+        int age = GetPositiveInt("Введите возраст (число больше 0): ");
+
+        bool hasPet = GetYesNo("Есть ли у вас питомец? (да/нет): ");
+        string[] petNames = null;
+
+        if (hasPet)
+        {
+            int petCount = GetPositiveInt("Введите количество питомцев (число больше 0): ");
+            petNames = GetPetNames(petCount);
+        }
+
+        int favoriteColorCount = GetPositiveInt("Введите количество любимых цветов (число больше 0): ");
+        string[] favoriteColors = GetFavoriteColors(favoriteColorCount);
+
+        return (name, surname, age, hasPet, petNames, favoriteColors);
+    }
+
+    static void DisplayUserData((string name, string surname, int age, bool hasPet, string[] petNames, string[] favoriteColors) userInfo)
+    {
+        Console.WriteLine($"Имя: {userInfo.name}");
+        Console.WriteLine($"Фамилия: {userInfo.surname}");
+        Console.WriteLine($"Возраст: {userInfo.age}");
+        Console.WriteLine($"Наличие питомца: {(userInfo.hasPet ? "Да" : "Нет")}");
+
+        if (userInfo.hasPet)
+        {
+            Console.WriteLine("Клички питомцев:");
+            foreach (var petName in userInfo.petNames)
+            {
+                Console.WriteLine($"- {petName}");
+            }
+        }
+
+        Console.WriteLine("Любимые цвета:");
+        foreach (var color in userInfo.favoriteColors)
+        {
+            Console.WriteLine($"- {color}");
+        }
+    }
+
+    static int GetPositiveInt(string prompt)
+    {
+        int number;
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            if (int.TryParse(input, out number) && number > 0)
+                return number;
+
+            Console.WriteLine("Неверный ввод. Пожалуйста, введите число больше 0.");
+        }
+    }
+
+    static bool GetYesNo(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine().Trim().ToLower();
+            if (input == "да") return true;
+            if (input == "нет") return false;
+            Console.WriteLine("Неверный ввод. Пожалуйста, введите 'да' или 'нет'.");
+        }
+    }
+
+    static string[] GetPetNames(int petCount)
+    {
+        string[] petNames = new string[petCount];
+        for (int i = 0; i < petCount; i++)
+        {
+            Console.Write($"Введите кличку питомца {i + 1}: ");
+            petNames[i] = Console.ReadLine();
+        }
+        return petNames;
+    }
+
+    static string[] GetFavoriteColors(int colorCount)
+    {
+        string[] favoriteColors = new string[colorCount];
+        for (int i = 0; i < colorCount; i++)
+        {
+            Console.Write($"Введите любимый цвет {i + 1}: ");
+            favoriteColors[i] = Console.ReadLine();
+        }
+        return favoriteColors;
+    }
+}
