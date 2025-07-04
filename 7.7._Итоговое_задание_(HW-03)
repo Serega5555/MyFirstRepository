@@ -1,0 +1,101 @@
+abstract class Delivery
+{
+    public string Address { get; set; }
+    public abstract decimal CalculateCost();
+    public abstract string DeliveryStatus();
+}
+
+class HomeDelivery : Delivery 
+{
+    public string ContactPerson { get; set; }
+    public string PhoneNumber { get; set; }
+
+    public override decimal CalculateCost()
+    {
+        // Пример расчета стоимости доставки для домашней доставки
+        return 500; // фиксированная стоимость
+    }
+
+    public override string DeliveryStatus()
+    {
+        return "В пути"; // статус доставки
+    }
+}
+
+class PickPointDelivery : Delivery 
+{
+    public string PointName { get; set; }
+    
+    public override decimal CalculateCost()
+    {
+        // Пример расчета стоимости для доставки в пункт выдачи
+        return 300; // фиксированная стоимость
+    }
+
+    public override string DeliveryStatus()
+    {
+        return "Готово к выдаче"; // статус доставки
+    }
+}
+
+class ShopDelivery : Delivery 
+{
+    public string ShopName { get; set; }
+    
+    public override decimal CalculateCost()
+    {
+        // Пример расчета стоимости для доставки из магазина
+        return 400; // фиксированная стоимость
+    }
+
+    public override string DeliveryStatus()
+    {
+        return "Доставлено в магазин"; // статус доставки
+    }
+}
+
+class Order<TDelivery, TStruct> where TDelivery : Delivery 
+{
+    public TDelivery Delivery { get; set; }
+    public int Number { get; set; }
+    public string Description { get; set; }
+    
+    public void DisplayAddress() 
+    {
+        Console.WriteLine(Delivery.Address);
+    }
+
+    public void DisplayCost()
+    {
+        Console.WriteLine($"Стоимость доставки: {Delivery.CalculateCost()}");
+    }
+
+    public void DisplayStatus()
+    {
+        Console.WriteLine($"Статус заказа: {Delivery.DeliveryStatus()}");
+    }
+}
+
+// Пример структуры для заказа
+class OrderDetails
+{
+    public string ItemName { get; set; }
+    public int Quantity { get; set; }
+}
+
+// Использование
+var order1 = new Order<HomeDelivery, OrderDetails>
+{
+    Delivery = new HomeDelivery
+    {
+        Address = "Классическая улица, 12",
+        ContactPerson = "Иванов И.И.",
+        PhoneNumber = "123-456-7890"
+    },
+    Number = 1,
+    Description = "Заказ на пиццу"
+};
+
+order1.DisplayAddress();
+order1.DisplayCost();
+order1.DisplayStatus();
