@@ -1,0 +1,60 @@
+using System;
+
+namespace DeliveryOrderSystem
+{
+    public class OrderDetails
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+
+        public OrderDetails(int productId, string productName, int quantity)
+        {
+            ProductId = productId;
+            ProductName = productName;
+            Quantity = quantity;
+        }
+    }
+
+    public class Order
+    {
+        public string Address { get; set; }
+        public double Cost { get; set; }
+        public string Status { get; set; }
+        public OrderDetails[] Products { get; set; }
+
+        public Order(string address, double cost, string status, OrderDetails[] products)
+        {
+            Address = address;
+            Cost = cost;
+            Status = status;
+            Products = products;
+        }
+
+        public void DisplayOrderInfo()
+        {
+            Console.WriteLine($"Address: {Address}");
+            Console.WriteLine($"Total Cost: {Cost}");
+            Console.WriteLine($"Status: {Status}");
+            Console.WriteLine("Ordered Products:");
+            foreach (var product in Products)
+            {
+                Console.WriteLine($"- {product.ProductName} (ID: {product.ProductId}, Quantity: {product.Quantity})");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            OrderDetails[] orderItems =
+            {
+                new OrderDetails(1, "Product A", 2),
+                new OrderDetails(2, "Product B", 1)
+            };
+            Order order = new Order("Невский пр.49, Ленинград, Россия", 49.99, "Processing", orderItems);
+            order.DisplayOrderInfo();
+        }
+    }
+}
