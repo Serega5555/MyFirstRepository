@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+
+namespace SortNamesApp
+{
+    // Определяем собственное исключение
+    public class InvalidInputException : Exception
+    {
+        public InvalidInputException(string message) : base(message) { }
+    }
+
+    public class Program
+    {
+        // Событие для сортировки
+        public static event Action<List<string>, bool> SortEvent;
+
+        static void Main(string[] args)
+        {
+            List<string> surnames = new List<string>
+            {
+                "Иванов",
+                "Петров",
+                "Сидоров",
+                "Алексеев",
+                "Борисов"
+            };
+
+            SortEvent += SortSurnames;
+
+            try
+            {
+                Console.WriteLine("Введите '1' для сортировки фамилий от А до Я или '2' для сортировки от Я до А:");
+                string input = Console.ReadLine();
+                bool ascending = false;
+
+                if (input == "1")
+                {
+                    ascending = true;
+                }
+                else if (input == "2")
+                {
+                    ascending = false;
+                }
+                else
+                {
+                    throw new InvalidInputException("Введено недопустимое значение. Пожалуйста, введите 1 или 2.");
+                }
+
+                // Вызываем событие
+                SortEvent?.Invoke(surnames, ascending);
+
+                Console.WriteLine("Отсортированный список фамилий:");
+                foreach (var surname in surnames)
+                {
+                    Console.WriteLine(surname);
+                }
+            }
+            catch (InvalidInputException ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("Программа завершила работу.");
+            }
+        }
+
+        // Метод, который сортирует фамилии
+        private static void SortSurnames(List<string> surnames, bool ascending)
+        {
+            surnames.Sort((x, y) => ascending ? string.Compare(x, y) : string.Compare(y, x));
+        }
+    }
+}
